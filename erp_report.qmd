@@ -1,15 +1,17 @@
 ---
-title: "ERP analysis report (customise title to fit your topic)"
-author: "Your name"
+title: "N170 Responses to Faces and Cars"
+author: "Biya Benny"
 date: today
 format: 
     html:
+        echo: false
         embed-resources: true
         toc: true
         toc-depth: 3
-        code-fold: true
+        code-fold: false
         theme: flatly # adapt this to a theme of your choice if you'd like
 execute:
+    echo: false
     warning: false
     message: false
 bibliography: "erp_report.bib"
@@ -18,6 +20,7 @@ bibliography: "erp_report.bib"
 ## Setup
 
 ```{python}
+#| echo: false
 # Specify the required imports for your analysis
 from pathlib import Path
 
@@ -29,6 +32,7 @@ from scripts.preproc import preprocess
 ```
 
 ```{python}
+#| echo: false
 # Specify the required paths for your analysis
 # Note that we now include a folder for saving preprocessed data
 RAW_PATH = Path("data/raw")
@@ -37,37 +41,55 @@ PROCESSED_PATH = Path("data/processed")
 
 ## Introduction
 
-Provide an introduction to the ERP component of your choice here. This should include a brief literature review -- see report instructions for details.
-Use appropriate subheadings as required: adapt the ones below, create new ones or delete as needed.
+### The N170 and Face Processing
 
-### Intro subheading 1
+Recognising faces is something people do almost every day, whether it involves identifying someone they know or understanding social interactions. Because faces provide important information, researchers have been interested in how the brain processes them. One way to study this is through electroencephalography (EEG), which records electrical activity from the scalp. Researchers can then examine event-related potentials (ERPs), which are changes in brain activity linked to particular events, such as viewing an image. An ERP component commonly studied in face perception is the N170.
 
-### Intro subheading 2
+The N170 is a negative-going brain response that usually occurs around 170 milliseconds after a visual stimulus is presented. It is typically observed over the lateral occipitotemporal regions, particularly at posterior electrodes such as P7, P8, PO7 and PO8. Previous studies have shown that faces often produce a larger negative N170 response than other types of objects. This suggests that the brain may process faces differently from other visual stimuli during the early stages of perception.
+
+### Previous Research and Interpretation
+
+One of the earlier studies investigating this response was conducted by  Bentin et al. [-@bentin1996]. They compared brain responses to faces and other visual stimuli and found that faces produced a strong negative response at approximately 172 milliseconds, especially over posterior temporal areas. This response was generally larger for faces than for other stimulus categories. The findings provided early evidence that the N170 is involved in the initial processing of facial information.
+
+Further research has explored what this component might tell us about face perception. Rossion and Jacques [-@rossion2012] suggested that the N170 reflects an early stage of processing visual information related to faces. However, this does not necessarily mean that the brain has already recognised a person's identity. Instead, the component may reflect the processing of visual features that allow faces to be distinguished from other objects.
+
+Although the N170 is strongly associated with face processing, researchers do not completely agree on whether it is exclusive to faces. Some studies have suggested that factors such as visual experience, attention and the characteristics of the images can also influence the response. For example, people who are highly familiar with certain object categories may show different brain responses when viewing those objects. This suggests that the N170 may be particularly sensitive to faces rather than being a response that occurs only when faces are presented.
+
+### Aim of the Present Study
+
+The ERP CORE resource provides EEG datasets that can be used to investigate established ERP components and reproduce previous findings [@kappenman2021]. Its N170 dataset includes brain responses to faces, cars and scrambled versions of these images, allowing researchers to compare how different visual stimuli are processed.
+
+The present report aimed to investigate whether faces and cars produced different N170 responses. To examine this, EEG responses were compared at electrode PO8, focusing on the average amplitude between 110 and 150 milliseconds after stimulus presentation. Based on previous research, it was expected that faces would produce a more negative response than cars, reflecting the N170 component's sensitivity to face processing.
 
 ## Methods
 
-Complete the following subsections using the information from @kappenman2021. Don't forget to mention that the data are from the ERP CORE resource under a Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0). 
+This report used EEG data from the ERP CORE dataset developed by Kappenman et al. [@kappenman2021]. The N170 component was examined by comparing brain responses to face and car images. The dataset is available under the Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) licence.
 
 ### Participants
 
-Provide information on the number of participants and their demographics (sex, age, handedness) as well as the inclusion criteria for the study.
+The ERP CORE dataset provided demographic information for 40 participants, including 25 females and 15 males. Participants were aged between 18 and 30 years, with an average age of 21.5 years (SD = 2.87). Most participants were right-handed (38), while two were left-handed.
+
+For the present N170 analysis, 37 participants were included, following the exclusion information provided in the original ERP CORE N170 subject-summary file. Participants 001, 005 and 016 were excluded, leaving the remaining 37 participants for the analysis of face and car responses.
 
 ### Procedure
 
-Describe the task that participants completed. This should be tailored to the task / component that you chose to analyse.
+Participants completed a face-perception task in which they viewed images of faces, cars, scrambled faces and scrambled cars. Each image appeared in the centre of the screen for 300 milliseconds, followed by a grey screen with a fixation point for 1,100–1,300 milliseconds. Participants were asked to decide whether each image was an object (a face or car) or a texture (a scrambled image) by pressing the appropriate response button.
+
+The task included 320 trials, with 80 presentations from each of the four stimulus categories. The images were presented in a randomised order across blocks of 40 trials. Although the original task included all four image categories, the present analysis focused specifically on the EEG responses to faces and cars to investigate the N170 component.
 
 ### EEG recording
 
-Describe the EEG recording parameters: amplifier and type of cap used, electrode positions, CMS / DRL electrode positions, EOG electrode positions, and filter parameters.
+EEG activity was recorded using a Biosemi ActiveTwo system with 30 electrodes placed across the scalp according to the international 10–20 electrode system. Additional electrodes were positioned near the eyes to record eye movements and blinks. The original EEG recordings were collected at a sampling rate of 1024 Hz [@kappenman2021].
+
+For this report, a version of the ERP CORE N170 dataset provided for the course was used. These recordings had been downsampled to 256 Hz and saved in FIF format for analysis in Python.
 
 ### Analysis parameters
 
-Choose these parameters appropriate for the component that you are analysing. Use those recommended by @kappenman2021; see their Table 1. This holds for all parameters except for the filter parameters; for these, you can stick to the example parameters provided below.
-Describe the parameters in this section and also modify the code accordingly
 
 #### Preprocessing parameters
 
 ```{python}
+#| echo: false
 
 FILTER_SETTINGS = {
     "low_cutoff": 0.1,
@@ -76,20 +98,21 @@ FILTER_SETTINGS = {
 
 # This setting re-references to averaged mastoids (P9/P10 as proxy) 
 # To use an average reference, replace ["P9", "P10"] with None 
-REFERENCE = ["P9","P10"]
+REFERENCE = None
 
 ```
 
 #### Epoching parameters
 
 ```{python}
+#| echo: false
 TMIN = -0.2 # epoch start relative to critical event
-TMAX = 1.0  # epoch end relative to critical event
+TMAX = 0.8  # epoch end relative to critical event
 
 BASELINE = (-0.2,0) # baseline interval
 
 # critical conditions for averaging and epoching
-CONDITIONS = ["stimulus/compatible", "stimulus/incompatible"]
+CONDITIONS = ["stimulus/face", "stimulus/car"]
 
 REJECT = {
     "eeg": 150e-6,
@@ -97,15 +120,23 @@ REJECT = {
 }
 
 ```
+### EEG preprocessing and analysis
+
+The EEG recordings were analysed using Python. The data were filtered between 0.1 and 30 Hz and re-referenced using an average reference. The continuous EEG data were divided into epochs beginning 200 milliseconds before each stimulus and ending 800 milliseconds after it appeared. Baseline correction was applied using the 200 milliseconds before stimulus onset.
+
+To reduce the influence of artefacts, trials were rejected when EEG activity exceeded the 150 µV threshold or eye-movement activity exceeded the 250 µV threshold. The analysis followed the participant exclusions documented in the original ERP CORE N170 subject summary, leaving 37 participants.
+
+Separate ERP averages were calculated for face and car trials for each participant. These were then combined to produce grand-average waveforms. The N170 response was examined at electrode PO8 by measuring the mean amplitude between 110 and 150 milliseconds after stimulus onset.
 
 ## Data analysis
 
 ### Preprocessing
 
 ```{python}
+#| echo: false
 #| eval: true # set this to false if you don't want preprocessing to recompute
 #| output: false # this suppresses any output
-
+#| results: hide
 for raw_file in RAW_PATH.glob("*_raw.fif.gz"):
 
     # extract subject number
@@ -129,15 +160,23 @@ for raw_file in RAW_PATH.glob("*_raw.fif.gz"):
 ### Epoching and averaging
 
 ```{python}
-#| output: false
+#| echo: false 
+import csv
 
+trial_counts = []
+#| output: false
+#| results: hide
 # initialise empty dictionary to hold single-subject averages
 ss_avs = {}
 
 for cond in CONDITIONS:
     ss_avs[cond] = []
 
+original_exclusions = {"001", "005", "016"}
+
 for processed_file in PROCESSED_PATH.glob("*_raw.fif.gz"):
+    if processed_file.name[:3] in original_exclusions:
+        continue
     
     # read in preprocessed file
     processed = SimpleRaw(processed_file)
@@ -148,16 +187,38 @@ for processed_file in PROCESSED_PATH.glob("*_raw.fif.gz"):
     # epoch data
     epochs = SimpleEpoch(processed, events, event_id, tmin = TMIN, tmax = TMAX, baseline = BASELINE, reject = REJECT)
 
-    # subset epochs and average by condition 
-    for cond in CONDITIONS:
-        av = epochs[cond].average()
-        ss_avs[cond].append(av)
+        # Only include participants with usable trials in both conditions
+    epoch_counts = {cond: len(epochs[cond]) for cond in CONDITIONS}
+    face_count = epoch_counts["stimulus/face"]
+    car_count = epoch_counts["stimulus/car"]
+
+    print(f"{processed_file.name}: Faces = {face_count}, Cars = {car_count}")
+    trial_counts.append({
+        "participant": processed_file.name,
+        "faces": face_count,
+        "cars": car_count
+    })
+    if all(count > 0 for count in epoch_counts.values()):
+        for cond in CONDITIONS:
+            av = epochs[cond].average()
+            ss_avs[cond].append(av)
+    else:
+        print(f"Excluded {processed_file.name}: {epoch_counts}")
+
+
+with open("n170_trial_counts.csv", "w", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["participant", "faces", "cars"])
+    writer.writeheader()
+    writer.writerows(trial_counts)
+
+print("Trial counts saved to n170_trial_counts.csv")
 
 ```
 
 ### Grand average
 
 ```{python}
+#| echo: false
 #| output: false
 
 # create an empty dict to hold our grand averages
@@ -170,30 +231,51 @@ for cond in CONDITIONS:
 
 ## Results
 
-### Grand average: expected effect
+### Grand average N170 responses
 
-Plot the electrode deemed most representative for the effect by @kappenman2021.
-Set the parameters for the specified analysis window, which will include dotted vertical lines marking the analysis window on the plot.
-Note: for some components, @kappenman2021 refer to two electrode sites. If this is the case for your chosen component, the analysis requires a consideration of lateralisation; please make an appointment to discuss the required analysis tweaks with Ina.
 
 ```{python}
-selected_electrode = "FCz"
-plot_title = "Grand average for N2: Incompatible versus compatible Flanker stimuli"
-analysis_window_start = 0.2
-analysis_window_end = 0.4
+#| echo: false
+selected_electrode = "PO8"
+plot_title = "N170 Grand Average: Faces versus Cars at PO8"
+analysis_window_start = 0.11
+analysis_window_end = 0.15
 
 plot_evokeds(grand_avs, picks = selected_electrode, invert_y = True, title = plot_title, vlines = [analysis_window_start, analysis_window_end])
 
 
 ```
+### N170 mean amplitudes
+
+```{python}
+#| echo: false
+for cond in CONDITIONS:
+    mne_evoked = grand_avs[cond]._evoked
+    window = mne_evoked.copy().pick("PO8").crop(
+        tmin=0.11,
+        tmax=0.15
+    )
+    mean_uv = window.data.mean() * 1e6
+    print(f"{cond}: {mean_uv:.3f} microvolts")
+```
+The grand-average ERP responses to faces and cars were compared at the PO8 electrode to investigate the N170 component. The analysis included 37 participants, following the exclusions reported in the original ERP CORE dataset.
+
+The average amplitude was measured between 110 and 150 milliseconds after the images were shown. Faces produced an average amplitude of 4.020 µV, while cars produced an average amplitude of 5.431 µV. This means that the response to faces was 1.411 µV more negative than the response to cars.
+
+This pattern was consistent with what was expected, as previous research generally shows a more negative N170 response to faces compared with other objects. However, these results are descriptive, meaning we cannot say whether the difference was statistically significant.
 
 ## Discussion and reflection
 
-Provide a brief discussion of the effect that you observed. Were you able to replicate the ERP component as observed by @kappenman2021? If not, what was different in your grand average ERP? 
+The aim of this report was to examine whether faces and cars produced different N170 responses. The results showed that faces produced a mean amplitude of 4.020 µV, compared with 5.431 µV for cars, at electrode PO8 between 110 and 150 milliseconds. This means the response to faces was 1.411 µV more negative than the response to cars. The finding was consistent with the expected direction of the N170 effect reported in previous research, where faces generally produce a stronger negative response than other objects [@bentin1996].
 
-What did you learn by applying the analysis process to a new dataset?
+Although the difference was in the expected direction, both mean amplitudes were positive. This suggests that the results should be interpreted carefully, as the expected negative-going N170 component was not clearly reproduced in the selected time window. Differences in preprocessing, the number of usable trials and individual variation in EEG responses may have influenced the findings. The present analysis also focused on a single electrode and did not include a statistical test, which limits the conclusions that can be drawn.
+
+Completing this analysis helped me understand how much work is involved in preparing EEG data before the results can be interpreted. I learned that decisions about filtering, artefact rejection, participant exclusions and electrode selection can influence the final ERP waveforms. I also gained a better understanding of why reproducible analysis is important, as recording the code and processing steps makes it easier to check results and identify errors.
+
+## Declaration on Generative AI Use
+
+I used ChatGPT during the preparation of this report to help me troubleshoot Python and Positron errors, and adapt the provided EEG analysis code for the N170 component. I also used it to organise citations and references. The reported numerical results were obtained from the ERP CORE dataset using Python. I reviewed and edited the report.
 
 ## References
 
-*Note: this document is set up to automatically generate a reference list via a bib file. We will look at how to do this in the week 9 workshop.*
 
